@@ -2,87 +2,86 @@ function getComputerChoice(){
     const random = Math.random() * 3;
     const choice = Math.floor(random);
 
-    if(choice === 0){
-        return "rock";
-    }
-    else if(choice === 1){
-        return "scissors";
-    }
-    else{
-        return "paper";
-    }
+    if(choice === 0) return "rock"; 
+    else if(choice === 1) return "scissors"; 
+    else return "paper"; 
 }
 
-function getHumanChoice(){
-    const message = "Lets Play a Game, Enter one of: paper, rock, scissors";
-    let choice = prompt(message);
-    if(choice == "rock"){
-        return "rock";
-    }
-    else if(choice == "scissors"){
-        return "scissors";
+function endGame(){
+    let winner = '';
+    if(humanScore > computerScore){
+        winner = "User"
     }
     else{
-        return "paper";
+        winner = "Computer"
     }
+    display.innerHTML = `
+        <p>The ${winner} has won the game!</p>
+        <p>The User had a score of: ${humanScore} | The Computer had a score of: ${computerScore}</p>
+    `;
+    humanScore = 0;
+    computerScore = 0;
 }
 
-function playRound(humanChoice, computerChoice){
+function playRound(event){
+    const humanChoice = this.id;
+    const computerChoice = getComputerChoice();
+
+    let message = '';
     if(humanChoice == "rock" && computerChoice == "paper"){
         computerScore++;
-        console.log("You lose, paper beats rock!")
+        message = "You lose, paper beats rock!";
     }
     else if(humanChoice == "rock" && computerChoice == "scissors"){
         humanScore++;
-        console.log("You win, rock beats scissors");
+        message = "You win, rock beats scissors";
     }
     else if(humanChoice == "rock" && computerChoice == "rock"){
-        console.log("Tie, both chose rock");
+        message = "Tie, both chose rock";
     }
     else if(humanChoice == "paper" && computerChoice == "rock"){
         humanScore++;
-        console.log("You win, paper beats rock!");
+        message = "You win, paper beats rock!";
     }
     else if(humanChoice == "paper" && computerChoice == "scissors"){
         computerScore++;
-        console.log("You lose, scissors cut paper");
+        message = "You lose, scissors cut paper";
     }
     else if(humanChoice == "paper" && computerChoice == "paper"){
-        console.log("Its a tie, both chose paper");
+        message = "Its a tie, both chose paper";
     }
     else if(humanChoice == "scissors" && computerChoice == "paper"){
         humanScore++;
-        console.log("You win, scissors cut paper");
+        message = "You win, scissors cut paper";
     }
     else if(humanChoice == "scissors" && computerChoice == "rock"){
         computerScore++;
-        console.log("You lose, rock smashes scissors");
+        message = "You lose, rock smashes scissors";
     }
     else if(humanChoice == "scissors" && computerChoice == "scissors"){
-        console.log("Its a tie, both are lesbians");
+        message = "It's a tie, both chose scissors";
     }
-}
 
-function playGame(){
-    for(let i = 0; i < 5; i++){
-        let h = getHumanChoice();
-        let c = getComputerChoice();
-        playRound(h, c);
-    }
-    if (humanScore > computerScore){
-        console.log("The user has won");
-    }
-    else if(humanScore < computerScore){
-        console.log("The computer has bested the user");
+    if(computerScore >= 5 || humanScore >= 5){
+        endGame(computerScore, humanScore);
     }
     else{
-        console.log("Ian Hawke declares this as a tie");
+        display.innerHTML = `
+        <p>${message}</p>
+        <p>Your Score: ${humanScore} | Computer Score: ${computerScore}</p>
+        `;
     }
 }
-
 
 let humanScore = 0;
 let computerScore = 0;
-playGame();
+const paper = document.querySelector('.paper');
+const rock = document.querySelector('.rock');
+const scissors = document.querySelector('.scissors');
+const display = document.getElementById('result');
+
+paper.addEventListener('click', playRound);
+rock.addEventListener('click', playRound);
+scissors.addEventListener('click', playRound);
 
 
